@@ -83,9 +83,79 @@ impl FieldElement{
         }
 
     }
-    impl AddAssign for FieldElement{
-        
+   impl AddAssign for FieldElement{
+       fn add_assign(&mut self, other:FieldElement){
+           if self.1!=other.1{
+               panic!("Fields must be same");
+           }
+           self.0=(self.0+other.0)%self.1.0;
+       }
+   }
+
+    impl Sub for FieldElement{
+         type Output =FieldElement;
+         fn sub(self, other:FieldElement)->FieldElement{
+              if self.1!=other.1{
+                panic!("Fields must be same");
+              }
+              if self.0<other.0{
+                  FieldElement((self.0+ self.1.0-other.0)%self.1.0,self.1)} else{
+                      FieldElement((self.0-other.0)%self.1.0,self.1)
+                  } } }
+                  impl SubAssign for FieldElement{
+                      fn sub_assign(&mut self, other:FieldElement){
+                          if self.1!=other.1{
+                              panic!("Fields must be same");
+                          }
+                          if self.0<other.0{
+                              self.0=(self.0+self.1.0-other.0)%self.1.0;
+                          }else{
+                              self.0=(self.0-other.0)%self.1.0;
+                          }
+                      }
+                  }
+                  impl Mul for FieldElement{
+                      type Output =FieldElement;
+                      fn mul(self, other:FieldElement)->FieldElement{
+                          if self.1!=other.1{
+                              panic!("Fields must be same");
+                          }
+                          FieldElement((self.0*other.0)%self.1.0,self.1)
+                      }
+                  }
+                  impl MulAssign for FieldElement{
+                      fn mul_assign(&mut self, other:FieldElement){
+                          if self.1!=other.1{
+                              panic!("Fields must be same");
+                          }
+                          self.0=(self.0*other.0)%self.1.0;
+                      }
+                  }
+                  impl Div for FieldElement{
+                      type Output =FieldElement;
+                      fn div(self, other:FieldElement)->FieldElement{
+                          if self.1!=other.1{
+                              panic!("Fields must be same");
+                          }
+                          FieldElement((self.0*other.inverse().0)%self.1.0,self.1)
+                      }
+                  }
+impl DivAssign for FieldElement{
+    fn div_assign(&mut self, other:FieldElement){
+        if self.1!=other.1{
+            panic!("Fields must be same");
+        }
+        self.0=(self.0*other.inverse().0)%self.1.0;
     }
+}
+impl Neg for FieldElement{
+    type Output =FieldElement;
+    fn neg(self)->FieldElement{
+        FieldElement((self.1.0-self.0)%self.1.0,self.1)
+    }
+}
+   
+
     
 
 
